@@ -1,0 +1,2 @@
+isc-bind:
+  pkg.installed: []

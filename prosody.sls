@@ -1,0 +1,2 @@
+prosody:
+  pkg.installed: []
