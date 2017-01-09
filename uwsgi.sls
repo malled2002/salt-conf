@@ -2,16 +2,22 @@ uwsgi2:
   pip.installed:
     - name: uwsgi
 
+/etc/uwsgi-emperor/vassals/:
   file.directory:
-    - name: /etc/uwsgi-emperor/vassals/ 
+#    - name: /etc/uwsgi-emperor/vassals/ 
     - user: nsupdate
     - group: www
     - dir_mode: 755
     - file_mode: 644
+    - makedirs: True
+    - recurse:
+      - user
+      - group
+      - mode
 
-test:
+/etc/uwsgi-emperor/emperor.ini:
   file.managed:
-    - name: /etc/uwsgi-emperor/emperor.ini
+#    - name: /etc/uwsgi-emperor/emperor.ini
     - source: salt://uwsgi/emperor.ini
     - user: nsupdate
     - group: www
