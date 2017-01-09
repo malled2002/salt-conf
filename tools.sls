@@ -1,0 +1,2 @@
+py-pip:
+  pkg.installed: []
