@@ -1,4 +1,4 @@
-app-pkgs:
+app-pkgs-nsupdate:
   pkg.installed:
     - names:
       - git
@@ -18,7 +18,7 @@ webapp:
     - name: https://github.com/nsupdate-info/nsupdate.info
     - rev: master
     - target: /home/nsupdate/venv/nsupdate
-    - force: true
+    - force_clone: true
     - require:
       - pkg: app-pkgs
 
@@ -28,7 +28,7 @@ mysite-env:
     - cwd: /home/nsupdate/venv/nsupdate
     - user: nsupdate
     - no_site_packages: True
-    - no_chown: True
+    - no_chown: False
     - requirements: /home/nsupdate/venv/nsupdate/requirements.d/prod.txt
 
   file.managed:
