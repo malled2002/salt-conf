@@ -1,0 +1,2 @@
+postgresql-server:
+  pkg.installed: []
