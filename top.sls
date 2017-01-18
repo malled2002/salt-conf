@@ -1,6 +1,9 @@
 base:
   '*':
+    - system
     - tools
+    - httpd
+    - postgresql
     - gogs
     - nsupdate
     - uwsgi
