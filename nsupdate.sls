@@ -17,18 +17,15 @@ webapp:
   git.latest:
     - name: https://github.com/nsupdate-info/nsupdate.info
     - rev: master
-    - target: /home/nsupdate/venv/nsupdate
+    - user: nsupdate
+    - target: /home/nsupdate/nsupdate.info
     - force_clone: true
     - require:
-      - pkg: app-pkgs
+      - pkg: app-pkgs-nsupdate
 
 mysite-env:
-  virtualenv.managed:
-    - name: /home/nsupdate/venv
-    - cwd: /home/nsupdate/venv/nsupdate
-    - user: nsupdate
-    - no_site_packages: True
-    - no_chown: False
+  pip.installed:
+    - name: django >= 1.6, <= 1.7
     - requirements: /home/nsupdate/venv/nsupdate/requirements.d/prod.txt
 
   file.managed:
@@ -37,3 +34,23 @@ mysite-env:
     - user: nsupdate
     - group: www
       
+/home/nsupdate/nsupdate.info/nsupdate.sqlite:
+  file.managed:
+    - source: salt://nsupdate/nsupdate.sqlite
+    - user: nsupdate
+    - group: www
+
+/home/nsupdate/nsupdate.info/local_settings.py:
+  file.managed:
+    - source: salt://nsupdate/local_settings.py
+    - user: nsupdate
+    - group: www
+
+nsupdate_migrate:
+  cmd.run:
+    - name: python manage.py migrate
+    - runas: nsupdate
+    - cwd: /home/nsupdate/nsupdate.info/
+    - env:
+      - DJANGO_SETTINGS_MODULE: local_settings
+
