@@ -1,6 +1,8 @@
 uwsgi2:
   pip.installed:
     - name: uwsgi
+    - require:
+      - sls: system
 
 /etc/uwsgi-emperor/vassals/:
   file.directory:
@@ -22,3 +24,11 @@ uwsgi2:
     - user: nsupdate
     - group: www
     - mode: 644
+
+/var/log/uwsgi/nsupdate.log:
+  file.managed:
+    - makedirs: True
+    - user: nsupdate
+    - group: www
+    - mode: 644
+
