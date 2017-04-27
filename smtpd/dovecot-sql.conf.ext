@@ -1,0 +1,13 @@
+driver = sqlite
+connect = /etc/mail/smtpd.sqlite
+default_pass_scheme = BLF-CRYPT
+
+password_query = \
+  SELECT password \
+  FROM users \
+  WHERE mailbox = replace('%u', '_', '@') AND password NOT NULL
+
+user_query = \
+  SELECT '/var/vmail/'||domain||'/'||username AS home \
+  FROM users \
+  WHERE mailbox = replace('%u', '_', '@') AND password NOT NULL

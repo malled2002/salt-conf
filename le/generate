@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# needs https://github.com/diafygi/acme-tiny/
+
+# first time
+# mkdir -p /var/le/domains/{domains you need}
+
+# create account master key for Letsencrypt to run
+# openssl genrsa 4096 > master.key
+
+# Think about creating web vhost and DNS records
+
+timestamp=$(date +%s)
+domain=$1
+
+if [ ! -d /var/www/htdocs/$1 ] ; then
+echo "webserver not ready"
+exit
+fi
+
+mkdir -p /var/le/domains/$domain/$timestamp/
+cd /var/le/domains/$domain/$timestamp/
+
+# create key
+openssl genrsa 4096 > serverkey.pem
+
+# create CSR
+openssl req -new -sha256 -key serverkey.pem -subj "/CN=$domain" > csr
+
+# create repository in web vhost for challenge
+# user le should be able to write here
+# user www should be able to read and walk the path (r and x rights)
+mkdir -p /var/www/htdocs/$1/.well-known/acme-challenge/
+
+# asking for cert
+python2.7 /var/le/acme-tiny/acme_tiny.py --account-key /var/le/master.key \
+ --csr /var/le/domains/$domain/$timestamp/csr \
+     --acme-dir /var/www/htdocs/$1/.well-known/acme-challenge/ \
+    > /var/le/domains/$domain/$timestamp/cert.pem
+
+# create the files you need (full and partial chainâ~@¦)
+# intermediate.pem contains the chain from letsencrypt AC certificate
+cat /var/le/domains/$domain/$timestamp/cert.pem \
+    /var/le/intermediate.pem > /var/le/domains/$domain/$timestamp/chain.pem
+
+# This full chain file with the key is needed for haproxy
+# (to deliver SNI in front of Httpd)
+cat /var/le/domains/$domain/$timestamp/cert.pem \
+    /var/le/intermediate.pem \
+    /var/le/domains/$domain/$timestamp/serverkey.pem \
+    > /var/le/domains/$domain/$timestamp/full.pem
+
+rm -rf /var/www/htdocs/$1/.well-known/*
+
+# if everything went ok, then modify the rights of the certificates files.
+# And return the timestamp.
+if [ -r cert.pem ] ; then
+    chmod 400 *
+    return=$timestamp
+else
+    return=10
+fi
+
+echo $return
+return $return
+

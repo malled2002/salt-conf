@@ -1,0 +1,22 @@
+#!/bin/sh
+
+for domain in $(ls /var/le/domains/)
+do
+    echo $domain
+
+    # create the certs and same time get the timestamp for which it has been generated.
+    time=$(su - le /var/le/generate $domain)
+
+    # give the certs to root
+    chown -R root:www /var/le/domains/$domain/$time/
+
+    # If the previous command did fine
+    # then link the certs to be the new certs (that will be loaded in a few days).
+    if [[ $? -eq 0 ]]; then
+        echo "renew $domain certs"
+        rm /var/le/domains/$domain/latest
+        ln -s /var/le/domains/$domain/$time/ /var/le/domains/$domain/latest
+    fi
+
+done
+

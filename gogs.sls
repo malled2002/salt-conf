@@ -8,7 +8,7 @@ app-pkgs:
 git:
   user.present:
     - fullname: git
-    - shell: /usr/local/bin/zsh
+    - shell: /usr/bin/false
     - home: /home/git
 
 /home/git/go:

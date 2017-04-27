@@ -6,7 +6,7 @@ app-pkgs-nsupdate:
 nsupdate:
   user.present:
     - fullname: nsupdate
-    - shell: /bin/zsh
+    - shell: /usr/bin/false
     - home: /home/nsupdate
     - uid: 4000
     - gid: www
@@ -25,8 +25,10 @@ webapp:
 
 mysite-env:
   pip.installed:
-    - name: django >= 1.6, <= 1.7
-    - requirements: /home/nsupdate/venv/nsupdate/requirements.d/prod.txt
+    - name: 
+      - django >= 1.6, <= 1.7
+      - social-auth-app-django
+    - requirements: /home/nsupdate/nsupdate.info/requirements.d/prod.txt
 
   file.managed:
     - name: /etc/uwsgi-emperor/vassals/nsupdate.ini

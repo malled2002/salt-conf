@@ -1,0 +1,12 @@
+mail_location = maildir:~/Maildir
+
+passdb {
+  driver = sql
+  args = /etc/dovecot/dovecot-sql.conf.ext
+}
+
+userdb {
+  driver = sql
+  args = /etc/dovecot/dovecot-sql.conf.ext
+  override_fields = uid=vmail gid=vmail
+}
