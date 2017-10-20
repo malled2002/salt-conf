@@ -33,3 +33,9 @@ acme-tiny:
     - target: /var/le/acme-tiny
     - force_clone: true
 
+/var/www/htdocs/acme/.well-known/acme-challenge:
+  file.directory:
+    - user: le
+    - group: wheel
+    - mode: 755
+    - makedirs: True
